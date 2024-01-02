@@ -35,6 +35,6 @@ workflows:
     jobs:
       - build
       - test:
-        # to let `test` job run after the `build` job
-        requires:
-          - build
+          # to let `test` job run after the `build` job
+          requires:
+            - build
