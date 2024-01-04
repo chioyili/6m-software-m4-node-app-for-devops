@@ -39,19 +39,37 @@ jobs:
       - docker/push:
           image: chioyili/education-space
           tag: v1.0.1
-  deploy:
+  # deploy:
+  #   docker:
+  #     - image: cimg/node:16.10
+  #   steps:
+  #     - setup_remote_docker
+  #     - checkout
+  #     - heroku/install
+  #     - run:
+  #         name: Heroku Container Push
+  #         command: |
+  #             heroku container:login
+  #             heroku container:push web -a chioyili-su-devops
+  #             heroku container:release web -a chioyili-su-devops
+  # 
+  # below: pull image from dockerhub and deploy
+  pull-and-deploy:
     docker:
-      - image: cimg/node:16.10
+      -image: cimg/node:16.10
     steps:
       - setup_remote_docker
-      - checkout
       - heroku/install
+      - docker/pull:
+          images: chioyili/education-space:v1.0.1
       - run:
-          name: Heroku Container Push
+          name: Heroku Container Push With Image From Docker Hub
           command: |
               heroku container:login
-              heroku container:push web -a chioyili-su-devops
+              docker tag chioyili/education-space:v1.0.1 registry.heroku.com/chioyili-su-devops/web
+              docker push registry.heroku.com/chioyili-su-devops/web
               heroku container:release web -a chioyili-su-devops
+      
 
 workflows:
   simple_workflow:
@@ -63,6 +81,6 @@ workflows:
       - publish:
           requires:
             - test
-      - deploy:
+      - pull-and-deploy:
           requires:
-            - test
+            - publish
