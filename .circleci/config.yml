@@ -58,7 +58,7 @@ jobs:
       - setup_remote_docker
       - heroku/install
       - docker/pull:
-          images: amidewing/education-space:v1.0.1
+          images: chioyili/education-space:v1.0.1
       - run:
           name: Heroku Container Push With Image From Docker Hub
           command: |
