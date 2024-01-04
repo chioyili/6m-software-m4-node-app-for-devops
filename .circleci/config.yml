@@ -27,17 +27,16 @@ jobs:
           echo "Running tests..."
           npm test
   publish:
-    # Assignment
     executor: docker/docker
-    steps: 
+    steps:
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
-          image: chioyili/education-space
+          image: amidewing/education-space
           tag: v1.0.1
       - docker/push:
-          image: chioyili/education-space
+          image: amidewing/education-space
           tag: v1.0.1
   # deploy:
   #   docker:
@@ -50,26 +49,25 @@ jobs:
   #         name: Heroku Container Push
   #         command: |
   #             heroku container:login
-  #             heroku container:push web -a chioyili-su-devops
-  #             heroku container:release web -a chioyili-su-devops
-  # 
-  # below: pull image from dockerhub and deploy
+  #             heroku container:push web -a chinhow-su-devops
+  #             heroku container:release web -a chinhow-su-devops
   pull-and-deploy:
     docker:
-      -image: cimg/node:16.10
+      - image: cimg/node:16.10
     steps:
       - setup_remote_docker
       - heroku/install
       - docker/pull:
-          images: chioyili/education-space:v1.0.1
+          images: amidewing/education-space:v1.0.1
       - run:
           name: Heroku Container Push With Image From Docker Hub
           command: |
               heroku container:login
-              docker tag chioyili/education-space:v1.0.1 registry.heroku.com/chioyili-su-devops/web
-              docker push registry.heroku.com/chioyili-su-devops/web
-              heroku container:release web -a chioyili-su-devops
-      
+              docker tag amidewing/education-space:v1.0.1 registry.heroku.com/chinhow-su-devops/web
+              # format --- docker tag <image name from docker hub> registry.heroku.com/<app-name>/web
+              docker push registry.heroku.com/chinhow-su-devops/web
+              # format --- docker push registry.heroku.com/<app-name>/web
+              heroku container:release web -a chinhow-su-devops
 
 workflows:
   simple_workflow:
