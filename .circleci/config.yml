@@ -97,11 +97,11 @@ workflows:
       - test:
           requires:
             - build
-              filters:
-                branches:
-                  only: 
-                    - main
-                    - release
+          filters:
+            branches:
+              only: 
+                - main
+                - release
       - scan:
           requires:
             - test
