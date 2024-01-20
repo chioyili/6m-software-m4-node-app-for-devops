@@ -64,6 +64,7 @@ jobs:
   #             heroku container:login
   #             heroku container:push web -a chinhow-su-devops
   #             heroku container:release web -a chinhow-su-devops
+  # Assignment 4.5 -----------------------------------------------------
   pull-and-deploy:
     docker:
       - image: cimg/node:16.10
@@ -81,20 +82,60 @@ jobs:
               docker push registry.heroku.com/chioyili-su-devops/web
               # format --- docker push registry.heroku.com/<app-name>/web
               heroku container:release web -a chioyili-su-devops
+  # --------------------------------------------------------------------
 
+# Assignment 4.6 -------------------------------------------------------
 workflows:
   simple_workflow:
     jobs:
       - build
+          filters:
+            branches:
+              only: 
+                - main
+                - release
       - test:
           requires:
             - build
+              filters:
+                branches:
+                  only: 
+                    - main
+                    - release
       - scan:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                 - release
       - publish:
           requires:
-            - scan
-      # - pull-and-deploy:
-      #     requires:
-      #       - publish
+            - test
+          filters:
+            branches:
+              only:
+                 - release
+      - pull-and-deploy:
+          requires:
+            - publish
+          filters:
+            branches:
+              only:
+                 - release
+# ----------------------------------------------------------------------
+
+# workflows:
+#   simple_workflow:
+#     jobs:
+#       - build
+#       - test:
+#           requires:
+#             - build
+#       - scan:
+#           requires:
+#             - test
+#       - publish:
+#           requires:
+#             - scan
+
